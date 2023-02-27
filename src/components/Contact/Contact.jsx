@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { toast } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact, editContact } from 'redux/operations';
 import { Text, Button, ToastForm, ToastInput } from './Contact.styled';
 import { Formik } from 'formik';
 import { Error } from 'components/ContactForm/ContactForm.styled';
+import { selectContacts } from 'redux/selectors';
 
 let schema = yup.object().shape({
   name: yup
@@ -27,6 +28,7 @@ let schema = yup.object().shape({
 
 export const Contact = ({ contact: { id, name, number } }) => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   const handleDelete = () => {
     dispatch(deleteContact(id));
@@ -34,6 +36,10 @@ export const Contact = ({ contact: { id, name, number } }) => {
   };
 
   const handleToastSubmit = values => {
+    if (contacts.some(contact => contact.name === values.name)) {
+      toast.error(`Sorry, ${values.name} is already in contacts.`);
+      return;
+    }
     const editedValues = {
       id: id,
       name: values.name,

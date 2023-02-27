@@ -6,7 +6,7 @@ import { ContactsList } from './ContactsList/ContactsList';
 import { fetchContacts } from 'redux/operations';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getError, getIsLoading } from 'redux/selectors';
+import { selectError, selectIsLoading } from 'redux/selectors';
 import { Loader } from './Loader/Loader';
 import { Toaster } from 'react-hot-toast';
 
@@ -16,8 +16,8 @@ const TITLES = {
 };
 
 export const App = () => {
-  const isLoading = useSelector(getIsLoading);
-  const error = useSelector(getError);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const dispatch = useDispatch();
 
   useEffect(() => {

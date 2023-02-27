@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { StyledForm, Label, Input, Error, Button } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 import { addContact } from 'redux/operations';
 
 let schema = yup.object().shape({
@@ -31,7 +31,7 @@ const initialValues = {
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = (values, { resetForm }) => {
     if (contacts.some(contact => contact.name === values.name)) {
