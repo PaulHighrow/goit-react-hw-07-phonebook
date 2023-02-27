@@ -1,15 +1,27 @@
 import * as yup from 'yup';
-import 'yup-phone';
 import { Formik } from 'formik';
 import { StyledForm, Label, Input, Error, Button } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
 import { toast } from 'react-hot-toast';
 import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
 
 let schema = yup.object().shape({
-  name: yup.string().min(3).required(),
-  number: yup.string().phone().required(),
+  name: yup
+    .string()
+    .min(3, 'Name is too short!')
+    .matches(
+      /^[A-Za-zА-Яа-яёЁ]+(?:[-'\s][A-Za-zА-Яа-яёЁ]+)*$/,
+      'Name must not contain digits'
+    )
+    .required('Name is required!'),
+  number: yup
+    .string()
+    .matches(
+      /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
+      'Please enter a valid number!'
+    )
+    .required('Number is required!'),
 });
 
 const initialValues = {
@@ -27,8 +39,8 @@ export const ContactForm = () => {
       return;
     }
     dispatch(addContact(values));
-    toast.success('Contact successfully added!');
     resetForm();
+    toast.success('Contact successfully added!');
   };
 
   return (
